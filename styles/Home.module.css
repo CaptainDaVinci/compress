@@ -1,10 +1,38 @@
-.container {
-  min-height: 100vh;
-  padding: 0 0.5rem;
+.heading {
+  display: flex;
+  flex-direction: column;
+  background-color: #efefef;
+  justify-content: center;
+  align-items: center;
+}
+
+.description {
+  padding: 1rem 5rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.container {
+  padding: 5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #efefef;
+  text-align: center;
+}
+
+.footer h1 {
+  margin: 0;
+  padding: 0;
 }
 
 .title a {
@@ -89,4 +117,16 @@
     width: 100%;
     flex-direction: column;
   }
+}
+
+.dropzone {
+  border: 2px dashed #cccccc;
+  border-radius: 10px;
+  padding: 65px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.dropzone p {
+  margin-top: 0;
 }
