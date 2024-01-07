@@ -7,6 +7,7 @@ import JSZip from 'jszip';
 import encode from '../src/encoders/mozJPEG/worker/mozjpegEncode';
 import { builtinDecode } from '../src/encoders/utils';
 import { defaultOptions } from '../src/encoders/mozJPEG/shared/meta';
+import Image from 'next/image'
 
 export default function Home() {
   const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
@@ -16,7 +17,7 @@ export default function Home() {
   });
   const [compressing, setCompressing] = React.useState(false);
   const [compressedFilesList, setCompressedFilesList] = React.useState([]);
-  const [compressionQuality, setCompressionQuality] = React.useState(75); // Initial value for the slider
+  const [compressionQuality, setCompressionQuality] = React.useState(60); // Initial value for the slider
 
   const getFileSize = (bytes) => {
     const kilobytes = bytes / 1024;
@@ -91,6 +92,29 @@ export default function Home() {
     }
   };
 
+  const getTotalOriginalFileSizeInBytes = () => {
+    return compressedFilesList.reduce((totalSize, file) => totalSize + file.originalFileSize, 0);
+  }
+
+  const getTotalCompressedFileSizeInBytes = () => {
+    return compressedFilesList.reduce((totalSize, file) => totalSize + file.compressedFileSize, 0);
+  }
+
+  const getTotalOriginalFileSize = () => {
+    return getFileSize(getTotalOriginalFileSizeInBytes());
+  };
+
+  const getTotalCompressedFileSize = () => {
+    return getFileSize(getTotalCompressedFileSizeInBytes());
+  };
+
+  const getPercentageSavedFromCompression = () => {
+    const original = getTotalOriginalFileSizeInBytes();
+    const compressed = getTotalCompressedFileSizeInBytes();
+
+    return (original - compressed) / original * 100;
+  }
+
   React.useEffect(() => {
     // Reset compressedFilesList when new files are selected
     setCompressedFilesList([]);
@@ -115,63 +139,80 @@ export default function Home() {
       <div className={styles.heading}>
         <h1>Bulk Image Compressor</h1>
       </div>
-      <div className={styles.description}>
-        <p>Compress multiple images instantly!<br/> </p>
-      </div>
       <div className={styles.container}>
-        <main>
+          {/* <div>
+            <h1>Privacy focused</h1>
+          </div> */}
+
           {/* Multifile Picker */}
           <div {...getRootProps()} className={styles.dropzone}>
             <input {...getInputProps()} />
-            <p>Drop or select one or more images here.</p>
-          </div>
-
-          {/* Compression quality slider */}
-          <div>
-            <label>Compression Strength (higher value means final image size will be lesser):</label>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={compressionQuality}
-              onChange={(e) => setCompressionQuality(Number(e.target.value))}
-            />
-            <span>{compressionQuality}</span>
+            <p>Drop images(s), or</p> 
+            <p>Select from your device by clicking here.</p>
           </div>
 
           {/* Compress selected files */}
           {acceptedFiles.length > 0 && (
-            <div>
-              <button onClick={compressFiles}>
-                {compressing ? 'Compressing...' : 'Compress Files'}
+            <>
+            {/* Compression quality slider */}
+              <div className={styles.settings}>
+                <label>Compression Strength [{compressionQuality}] </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={compressionQuality}
+                  onChange={(e) => setCompressionQuality(Number(e.target.value))}
+                  className={styles.slider}
+                />
+              </div>
+              <button onClick={compressFiles} className={styles.compressBtn} disabled={compressing}>
+                {compressing ? 'Compressing...' : '🗜Compress Files'}
               </button>
-            </div>
+            </>
           )}
 
-          {/* Download button */}
-          {(compressedFilesList.length > 0 && acceptedFiles.length > 0) && (
-            <div>
-              <button onClick={downloadFiles}>Download Compressed Files</button>
-            </div>
-          )}
+          {compressedFilesList.length > 0 && (
+            <div className={styles.resultContainer}>
+              {/* Download button */}
+              {acceptedFiles.length > 0 && (
+                <>
+                  <p>Compression completed! 🎉</p>
+                  <p>
+                    You saved <span className={styles.compressPercent}>{getPercentageSavedFromCompression().toFixed(2)}% </span> 
+                    ({getTotalOriginalFileSize()} → {getTotalCompressedFileSize()})
+                  </p>
+                  <button onClick={downloadFiles} className={styles.downloadBtn}>↓ Download Compressed File(s) ↓</button>
+                </>
+              )}
 
-          {(compressedFilesList.length > 0 && acceptedFiles.length > 0) &&  (
-            <div>
-              <h2>Top Compressed Files:</h2>
-              <ul>
-                {compressedFilesList.sort().slice(0, 5).map((f, index) => (
-                  <li key={index}>
-                    {`${f.fileName.slice(0, 20)}${f.fileName.length > 10 ? '...' : ''} from ${getFileSize(f.originalFileSize)} -> ${getFileSize(f.compressedFileSize)} (${f.compressionPercentage.toFixed(2)}%)`}
-                  </li>
-                ))}
-              </ul>
+              {/* Top compressed section */}
+              {(acceptedFiles.length > 0 && compressedFilesList.length > 1) &&  (
+                <div>
+                  <h4>Top Compressed Files</h4>
+                  <ul>
+                    {compressedFilesList.sort().slice(0, 5).map((f, index) => (
+                      <li key={index}>
+                        <span className={styles.fileName}>
+                          {f.fileName.slice(0, 20)}{f.fileName.length > 10 ? '...' : ''}
+                        </span>
+                        {`  ${getFileSize(f.originalFileSize)} → ${getFileSize(f.compressedFileSize)} `}
+
+                        {f.originalFileSize > f.compressedFileSize &&
+                        (
+                          <span className={styles.compressPercent}>({f.compressionPercentage.toFixed(2)}% ↓)</span>
+                        ) }
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
-        </main>
       </div>
       <div className={styles.footer}>
-        <h1>Thanks</h1>
+        <span>Thanks</span>
       </div>
     </>
-  );
+  )
 }

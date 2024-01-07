@@ -1,7 +1,6 @@
 .heading {
   display: flex;
   flex-direction: column;
-  background-color: #efefef;
   justify-content: center;
   align-items: center;
 }
@@ -15,19 +14,92 @@
 }
 
 .container {
-  padding: 5rem 1.5rem;
+  padding: 10px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.dropzone {
+  margin-top: 50px;
+  border: 2px dashed #cccccc;
+  font-size: 1rem;
+  border-radius: 30px;
+  padding: 50px;
+  width: 50%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.settings {
+  margin-top: 35px;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+.slider {
+  width: 150px;
+  accent-color: #49416D;
+}
+
+.compressBtn {
+  margin: 15px;
+  width: 10rem;
+  height: 3rem;
+  border-radius: 5px;
+  border: none;
+  background-color: #A882DD;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.resultContainer {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.resultContainer > p {
+  margin: 3px;
+}
+
+.downloadBtn {
+  margin: 15px;
+  width: 18rem;
+  height: 3rem;
+  background-color: #E08D79;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.fileName {
+  font-weight: bold;
+}
+
+.compressPercent {
+  font-weight: bold;
+  color: green;
+}
+
 .footer {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   bottom: 0;
+  height: 35px;
   width: 100%;
-  background-color: #efefef;
+  background-color: #49416D;
   text-align: center;
+  color: #E08D79;
 }
 
 .footer h1 {
@@ -117,16 +189,4 @@
     width: 100%;
     flex-direction: column;
   }
-}
-
-.dropzone {
-  border: 2px dashed #cccccc;
-  border-radius: 10px;
-  padding: 65px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.dropzone p {
-  margin-top: 0;
 }
