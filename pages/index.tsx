@@ -3,6 +3,10 @@ import { useDropzone } from 'react-dropzone';
 import styles from '../styles/Home.module.css';
 import React from 'react';
 import Script from 'next/script';
+import Compressor from 'compressorjs';
+import encode from '../src/encoders/mozJPEG/worker/mozjpegEncode';
+import { builtinDecode } from '../src/encoders/utils';
+import { defaultOptions } from '../src/encoders/mozJPEG/shared/meta';
 
 export default function Home() {
   const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
@@ -30,23 +34,25 @@ export default function Home() {
     URL.revokeObjectURL(url);
   }
 
-  const compressFiles = async () => {
+  const compressFiles = () => {
     const fileDetailsBeforeCompression = acceptedFiles.map((file: File) => ({
       name: file.name,
       size: getFileSize(file.size),
     }));
 
     const compressedFiles = [];
-    acceptedFiles.map(async (file, index, files) => {
-      console.log(acceptedFiles);
+    acceptedFiles.map(async (file) => {
+      const f = await encode(await builtinDecode(file), defaultOptions);
+      console.log(file.size, f.byteLength);
+      download(f, file.name);
     });
   };
 
   return (
       <>
       <Head>
-        <title>Bulk File Compressor</title>
-        <meta name="description" content="Compress one or multiple files (pdf, jpeg, png, jpg, doc, docx, etc)" />
+        <title>Bulk Image Compressor</title>
+        <meta name="description" content="Compress one or more images instantly" />
       </Head>
       <Script src="https://www.googletagmanager.com/gtag/js?id=G-RT43Z6PFC2" />
       <Script id="google-analytics">
@@ -59,31 +65,22 @@ export default function Home() {
         `}
       </Script>
       <div className={styles.heading}>
-        <h1>Bulk File Compressor</h1>
+        <h1>Bulk Image Compressor</h1>
       </div>
       <div className={styles.description}>
-        <p>
-          Compress multiple files - images or PDFs, at once! <br/>
-          Supported file types: PDF, JPEG, PNG, JPG, doc, docx and many more...
-        </p>
+        <p>Compress multiple images instantly!<br/> </p>
       </div>
       <div className={styles.container}>
         <main>
           {/* Multifile Picker */}
           <div {...getRootProps()} className={styles.dropzone}>
             <input {...getInputProps()} />
-            <p>Drag 'n' drop some files here, or click to select files</p>
+            <p>Drop or select one or more images here.</p>
           </div>
 
-          {/* Display selected files */}
+          {/* Compress selected files */}
           {acceptedFiles.length > 0 && (
             <div>
-              <h4>Selected Files:</h4>
-              <ul>
-                {acceptedFiles.map((file) => (
-                  <li key={file.name}>{file.name}</li>
-                ))}
-              </ul>
               <button onClick={compressFiles}>Compress Files</button>
             </div>
           )}
