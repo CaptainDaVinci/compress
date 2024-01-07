@@ -16,6 +16,7 @@ export default function Home() {
   });
   const [compressing, setCompressing] = React.useState(false);
   const [compressedFilesList, setCompressedFilesList] = React.useState([]);
+  const [compressionQuality, setCompressionQuality] = React.useState(75); // Initial value for the slider
 
   const getFileSize = (bytes) => {
     const kilobytes = bytes / 1024;
@@ -49,7 +50,9 @@ export default function Home() {
     try {
       setCompressing(true);
       await Promise.all(acceptedFiles.map(async (file, index, files) => {
-        const compressedData = await encode(await builtinDecode(file), defaultOptions);
+        const encodedData = await encode(await builtinDecode(file), {...defaultOptions, quality: Math.min(101 - compressionQuality, 100)});
+        const compressedData = encodedData.byteLength < file.size ? encodedData : await file.arrayBuffer();
+
         const compressedFile: CompressedFile = {
           fileName: file.name,
           originalFileSize: file.size,
@@ -59,15 +62,10 @@ export default function Home() {
         }
 
         compressedFiles.push(compressedFile);
-        console.log(index, files.length);
       }));
 
-      console.log('Compression complete');
       const sortedFiles = compressedFiles.sort((a, b) => b.compressionPercentage - a.compressionPercentage);
       setCompressedFilesList(sortedFiles);
-      compressedFiles.forEach(f => {
-        console.log(f.fileName, getFileSize(f.originalFileSize), getFileSize(f.compressedFileSize));
-      });
     } finally {
       setCompressing(false);
     }
@@ -126,6 +124,19 @@ export default function Home() {
           <div {...getRootProps()} className={styles.dropzone}>
             <input {...getInputProps()} />
             <p>Drop or select one or more images here.</p>
+          </div>
+
+          {/* Compression quality slider */}
+          <div>
+            <label>Compression Strength (higher value means final image size will be lesser):</label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={compressionQuality}
+              onChange={(e) => setCompressionQuality(Number(e.target.value))}
+            />
+            <span>{compressionQuality}</span>
           </div>
 
           {/* Compress selected files */}
