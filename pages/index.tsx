@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useDropzone } from 'react-dropzone';
 import styles from '../styles/Home.module.css';
 import React from 'react';
@@ -7,7 +8,7 @@ import JSZip from 'jszip';
 import encode from '../src/encoders/mozJPEG/worker/mozjpegEncode';
 import { builtinDecode } from '../src/encoders/utils';
 import { defaultOptions } from '../src/encoders/mozJPEG/shared/meta';
-import Image from 'next/image'
+import Footer from './footer';
 
 export default function Home() {
   const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
@@ -156,7 +157,8 @@ export default function Home() {
             <>
             {/* Compression quality slider */}
               <div className={styles.settings}>
-                <label>Compression Strength [{compressionQuality}] </label>
+                <label className={styles.sliderLabel}>Compression Strength [{compressionQuality}] </label>
+                <br />
                 <input
                   type="range"
                   min="0"
@@ -210,9 +212,7 @@ export default function Home() {
             </div>
           )}
       </div>
-      <div className={styles.footer}>
-        <span>Thanks</span>
-      </div>
+      <Footer/>
     </>
   )
 }
