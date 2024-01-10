@@ -7,6 +7,6 @@ export default function App({ Component, pageProps }) {
     <Head>
           <link rel="shortcut icon" href="./images/favicon.ico" />
     </Head>
-    <Component {...pageProps} />;
+    <Component {...pageProps} />
     </>)
 }

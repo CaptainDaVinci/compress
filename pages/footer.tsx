@@ -13,7 +13,7 @@ export default function Footer() {
                     <li><Link href='/terms-of-service'>Terms of Service</Link></li>
                 </ul>
                 <ul>
-                    <li>Made by <a href='https://twitter.com/CaptainDaVinci' style={{'text-decoration': 'underline'}} target='_blank'>@CaptainDaVinci</a></li>
+                    <li>Made by <a href='https://twitter.com/CaptainDaVinci' style={{'textDecoration': 'underline'}} target='_blank'>@CaptainDaVinci</a></li>
                 </ul>
           </div>
         )
