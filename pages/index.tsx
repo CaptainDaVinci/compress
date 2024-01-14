@@ -12,7 +12,9 @@ import Footer from './footer';
 export default function Home() {
   const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
     accept: {
-      'image/*': ['.jpeg', '.png', '.jpg']
+      'image/jpeg': [],
+      'image/png': [],
+      'image/jpg': [],
     }
   });
   const [compressing, setCompressing] = React.useState(false);
@@ -214,6 +216,7 @@ export default function Home() {
             <input {...getInputProps()} />
             <p>Drop images(s), or</p> 
             <p>Select from your device by clicking here.</p>
+            <p>(.png, .jpeg, .jpg)</p>
           </div>
 
           {/* Compress selected files */}

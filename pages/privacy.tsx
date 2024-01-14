@@ -2,6 +2,7 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Footer from './footer';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Privacy() {
     return (
@@ -31,6 +32,7 @@ export default function Privacy() {
                         </li>
                     </ul>
                 </div>
+                <p>You can read about our terms of service <Link href='/terms-of-service' style={{'textDecoration': 'underline'}}>here</Link></p>
             </div>
             <Footer/>
       </>
