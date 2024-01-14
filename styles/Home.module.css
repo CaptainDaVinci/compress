@@ -14,12 +14,34 @@
   align-items: center;
 }
 
+.landingImages {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.landingImageGroup {
+  padding: 1rem;
+  width: 25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.landingImageGroup label {
+  margin-top: 15px;
+  text-overflow: wrap;
+}
+
 .container {
   padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 55px;
 }
 
 .dropzone {
@@ -37,8 +59,7 @@
   margin-top: 35px;
   margin-bottom: 15px;
   font-size: 1rem;
-  width: 50%;
-  padding: 10px;
+  padding: 15px;
 }
 
 .slider {
@@ -55,6 +76,10 @@
   background-color: #A882DD;
   font-size: 1rem;
   cursor: pointer;
+}
+
+.compressBtn:hover {
+  border: 2px solid #49416D;
 }
 
 .resultContainer {
@@ -83,6 +108,10 @@
   overflow: hidden;
 }
 
+.downloadBtn:hover {
+  border: 2px solid #49416D;
+}
+
 .fileName {
   font-weight: bold;
 }
@@ -99,7 +128,7 @@
   align-items: center;
   position: fixed;
   bottom: 0;
-  height: 35px;
+  height: 45px;
   width: 100%;
   background-color: #49416D;
   color: #E08D79;
@@ -109,7 +138,7 @@
 .footer ul {
   list-style: none;
   padding: 0px;
-  margin: 0px 10px;
+  margin: 0px 0.1rem;
 }
 
 .footer li {
@@ -211,8 +240,9 @@
 
 
 .contentContainer {
-  width: 60%;
-  margin: 60px auto;
+  padding: 25px;
+  max-width: 650px;
+  margin: 2rem auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -221,5 +251,5 @@
 
 
 .contentContainer li {
-  margin: 25px;
+  margin-top: 2rem;
 }

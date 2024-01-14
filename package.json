@@ -6,6 +6,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@types/gtag.js": "^0.0.18",
     "compressorjs": "^1.2.1",
     "jszip": "^3.10.1",
     "next": "latest",

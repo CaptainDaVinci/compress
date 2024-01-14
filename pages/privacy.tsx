@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Footer from './footer';
 import Image from 'next/image';
@@ -5,6 +6,10 @@ import Image from 'next/image';
 export default function Privacy() {
     return (
         <>
+            <Head>
+                <title>Privacy</title>
+                <meta name="description" content="Compress one or more images instantly - Privacy" />
+            </Head>
             <div className={styles.heading}>
                 <h1>Privacy</h1>
                 <Image src="./images/privacy.svg" alt={''} width={200} height={100}/>

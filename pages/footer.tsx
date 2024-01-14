@@ -10,7 +10,7 @@ export default function Footer() {
                     <li><Link href='/privacy'>Privacy</Link></li>
                 </ul>
                 <ul>
-                    <li><Link href='/terms-of-service'>Terms of Service</Link></li>
+                    <li><Link href='/terms-of-service' style={{'textOverflow': 'wrap'}}>Terms of Service</Link></li>
                 </ul>
                 <ul>
                     <li>Made by <a href='https://twitter.com/CaptainDaVinci' style={{'textDecoration': 'underline'}} target='_blank'>@CaptainDaVinci</a></li>

@@ -1,10 +1,15 @@
 import styles from '../styles/Home.module.css';
 import Link from 'next/link';
 import Footer from './footer';
+import Head from 'next/head';
 
 export default function TOS() {
     return (
         <>
+            <Head>
+                <title>Terms of Service</title>
+                <meta name="description" content="Compress one or more images instantly - Terms of Service" />
+            </Head>
             <div className={styles.heading}>
                 <h1>Terms of Service</h1>
             </div>
