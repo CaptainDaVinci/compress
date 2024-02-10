@@ -10,7 +10,7 @@ export default function Footer() {
                     <li><Link href='/privacy'>Privacy</Link></li>
                 </ul>
                 <ul>
-                    <li><a href='https://captaindavinci.github.io/2024/01/14/bulk-image-compression.html' style={{'textDecoration': 'none'}} target='_blank'>Blog</a></li>
+                    <li><a href='https://blogs.captaindavinci.com/2024/01/14/bulk-image-compression.html' style={{'textDecoration': 'none'}} target='_blank'>Blog</a></li>
                 </ul>
                 <ul>
                     <li>Made by <a href='https://twitter.com/CaptainDaVinci' style={{'textDecoration': 'underline'}} target='_blank'>@CaptainDaVinci</a></li>

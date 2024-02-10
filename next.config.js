@@ -1,6 +1,6 @@
 const nextConfig = {
   output: "export",
-  basePath: "/filecompressor",
+  basePath: "",
 
   images: {
     unoptimized: true,

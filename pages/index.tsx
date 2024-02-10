@@ -140,12 +140,12 @@ export default function Home() {
       <>
       <Head>
         <title>Bulk Image Compressor</title>
-        <meta name="description" content="Compress one or bulk images instantly for free and reduce the size of your images to few kbs. Supported image formats - JPG, JPEG, PNG and many more. No sign-up or upload required, complete privacy." />
-        <meta name="keywords" content='compression,bulk,images,png,jpg,jpeg,privacy,free'/>
+        <meta name="description" content="Bulk compress your images instantly for free and reduce the size of your images to few kbs. Supported image formats - JPG, JPEG, PNG and many more. No sign-up or upload required, complete privacy." />
+        <meta name="keywords" content='compression,bulk,images,png,jpg,jpeg,privacy,free,lossless'/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta name="robots" content="index, follow"/>
         <meta name="author" content="CaptainDaVinci"/>
-        <link rel="canonical" href="https://captaindavinci.github.io/filecompressor" />
+        <link rel="canonical" href="https://compress.captaindavinci.com" />
       </Head>
       <div className={styles.heading}>
         <h1>Bulk Image Compressor</h1>
