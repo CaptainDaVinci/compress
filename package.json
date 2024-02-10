@@ -11,8 +11,11 @@
     "jszip": "^3.10.1",
     "next": "latest",
     "react": "18.2.0",
+    "react-compare-slider": "^3.0.1",
     "react-dom": "18.2.0",
-    "react-dropzone": "^14.2.3"
+    "react-dropzone": "^14.2.3",
+    "react-modal": "^3.16.1",
+    "wasm-feature-detect": "^1.6.1"
   },
   "engines": {
     "node": ">=18"

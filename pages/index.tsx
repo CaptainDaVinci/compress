@@ -2,12 +2,17 @@ import Head from 'next/head';
 import { useDropzone } from 'react-dropzone';
 import styles from '../styles/Home.module.css';
 import React, { useEffect } from 'react';
-import Image from 'next/image';
 import JSZip from 'jszip';
-import encode from '../src/encoders/mozJPEG/worker/mozjpegEncode';
-import { builtinDecode } from '../src/encoders/utils';
+import jpegEncode from '../src/encoders/mozJPEG/worker/mozjpegEncode';
+import pngEncode from '../src/encoders/oxiPNG/worker/oxipngEncode';
+import { blobToArrayBuffer, builtinDecode } from '../src/encoders/utils';
 import { defaultOptions } from '../src/encoders/mozJPEG/shared/meta';
 import Footer from './footer';
+import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider';
+import { canvasEncode } from '../src/encoders/utils/canvas';
+import Modal from 'react-modal';
+
+Modal.setAppElement("#root");
 
 export default function Home() {
   const { getRootProps, getInputProps, acceptedFiles } = useDropzone({
@@ -20,6 +25,8 @@ export default function Home() {
   const [compressing, setCompressing] = React.useState(false);
   const [compressedFilesList, setCompressedFilesList] = React.useState([]);
   const [compressionQuality, setCompressionQuality] = React.useState(60); // Initial value for the slider
+  const [previewIndex, setPreviewIndex] = React.useState(null);
+  const [openModel, setOpenModel] = React.useState(false);
 
   useEffect(() => {
     if (typeof window.gtag !== 'undefined' && compressedFilesList.length > 0) {
@@ -58,6 +65,7 @@ export default function Home() {
     originalFileSize: number,
     compressedFileSize: number,
     compressedFile: ArrayBuffer,
+    originalFile: File,
     compressionPercentage: number,
   };
 
@@ -67,7 +75,25 @@ export default function Home() {
       setCompressing(true);
       setCompressedFilesList([]);
       await Promise.all(acceptedFiles.map(async (file, index, files) => {
-        const encodedData = await encode(await builtinDecode(file), {...defaultOptions, quality: Math.min(101 - compressionQuality, 100)});
+        let encodedData;
+        if (file.type === 'image/png') {
+          try {
+            encodedData = await pngEncode(
+              await blobToArrayBuffer(file), 
+              { level: Math.min(Math.floor((compressionQuality / 100) * 4), 3), interlace: false }
+            );
+          } catch (e) {
+            let decodedImage = await builtinDecode(file);
+            encodedData = await pngEncode(
+              await blobToArrayBuffer(await canvasEncode(decodedImage, "image/png")), 
+              { level: Math.min(Math.floor((compressionQuality / 100) * 4), 3), interlace: false }
+            );
+          }
+        } else {
+          let decodedImage = await builtinDecode(file);
+          encodedData = await jpegEncode(decodedImage, { ...defaultOptions, quality: Math.min(101 - compressionQuality, 100) });
+        }
+
         const compressedData = encodedData.byteLength < file.size ? encodedData : await file.arrayBuffer();
 
         const compressedFile: CompressedFile = {
@@ -75,6 +101,7 @@ export default function Home() {
           originalFileSize: file.size,
           compressedFileSize: compressedData.byteLength,
           compressedFile: compressedData,
+          originalFile: file,
           compressionPercentage: ((file.size - compressedData.byteLength) / file.size) * 100,
         }
 
@@ -150,7 +177,7 @@ export default function Home() {
       <div className={styles.heading}>
         <h1>Bulk Image Compressor</h1>
       </div>
-      <div className={styles.landingImages}>
+      <div id="root" className={styles.landingImages}>
         <div className={styles.landingImageGroup}>
         <div dangerouslySetInnerHTML={{ __html: `
        <svg height="100px" width="100px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-51.2 -51.2 614.40 614.40" xml:space="preserve" fill="#49416D">
@@ -256,11 +283,11 @@ export default function Home() {
               )}
 
               {/* Top compressed section */}
-              {(acceptedFiles.length > 0 && compressedFilesList.length > 1) &&  (
+              {(acceptedFiles.length > 0 && compressedFilesList.length > 0) &&  (
                 <div>
                   <h4>Top Compressed Files</h4>
                   <ul>
-                    {compressedFilesList.sort().slice(0, 5).map((f, index) => (
+                    {compressedFilesList.map((f, index) => (
                       <li key={index}>
                         <span className={styles.fileName}>
                           {f.fileName.slice(0, 20)}{f.fileName.length > 10 ? '...' : ''}
@@ -271,6 +298,32 @@ export default function Home() {
                         (
                           <span className={styles.compressPercent}>({f.compressionPercentage.toFixed(2)}% ↓)</span>
                         ) }
+                         <button onClick={() => { setPreviewIndex(index); setOpenModel(true) }}> Preview </button>
+                         { previewIndex != null && (
+                            <Modal isOpen={openModel} style={{ width: '50%', height: '50%' }}>
+                              <div style={{ margin: 'auto', padding: 'auto'}}>
+                                <ReactCompareSlider
+                                  itemOne={
+                                    <img
+                                      src={URL.createObjectURL(compressedFilesList[previewIndex].originalFile)}
+                                      alt={`Original - ${compressedFilesList[previewIndex].fileName}`}
+                                      style={{ maxWidth: '100%', maxHeight: '100%' }}
+                                    />
+                                  }
+                                  itemTwo={
+                                    <img
+                                      src={URL.createObjectURL(new Blob([compressedFilesList[previewIndex].compressedFile]))}
+                                      alt={`Compressed - ${compressedFilesList[previewIndex].fileName}`}
+                                      style={{ maxWidth: '100%', maxHeight: '100%' }}
+                                    />
+                                  }
+                                  style={{ width: '100%', height: '60%' }}
+                                />
+                                <button onClick={() => setOpenModel(false)}>Close</button>
+                              </div>
+                            </Modal>
+                         )
+                        }
                       </li>
                     ))}
                   </ul>
