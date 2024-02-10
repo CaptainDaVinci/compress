@@ -20,3 +20,48 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+.closeButton {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding: 0px;
+  background-color: transparent;
+  border: none;
+  font-size: 3rem;
+  opacity: 0.3;
+  font-weight: 100;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  color: red; /* Change color on hover if desired */
+}
+
+/* Styling the scrollbar for WebKit browsers (like Chrome and Safari) */
+.ReactCompareSlider::-webkit-scrollbar {
+  width: 1px;
+}
+
+.ReactCompareSlider::-webkit-scrollbar-thumb {
+  background-color: #888; /* Change scrollbar thumb color */
+  border-radius: 6px;
+}
+
+.ReactCompareSlider::-webkit-scrollbar-track {
+  background-color: #eee; /* Change scrollbar track color */
+}
+
+.previewButton {
+  border: none;
+  background-color: transparent;
+  padding: 0px 20px 10px 0px;
+}
+
+.previewButton:hover {
+  cursor: zoom-in;
+}
+
+.compressedList {
+  list-style: none;
+}

@@ -11,6 +11,7 @@ import Footer from './footer';
 import { ReactCompareSlider, ReactCompareSliderImage } from 'react-compare-slider';
 import { canvasEncode } from '../src/encoders/utils/canvas';
 import Modal from 'react-modal';
+import FilePreviewModal from './imageModal';
 
 Modal.setAppElement("#root");
 
@@ -252,7 +253,6 @@ export default function Home() {
             {/* Compression quality slider */}
               <div className={styles.settings}>
                 <label className={styles.sliderLabel}>Compression Strength [{compressionQuality}] </label>
-                <br />
                 <input
                   type="range"
                   min="0"
@@ -273,10 +273,10 @@ export default function Home() {
               {/* Download button */}
               {acceptedFiles.length > 0 && (
                 <>
-                  <p>Compression completed! 🎉</p>
                   <p>
+                    Compression completed! 
                     You saved <span className={styles.compressPercent}>{getPercentageSavedFromCompression().toFixed(2)}% </span> 
-                    ({getTotalOriginalFileSize()} → {getTotalCompressedFileSize()})
+                    ({getTotalOriginalFileSize()} → {getTotalCompressedFileSize()}) 🎉
                   </p>
                   <button onClick={downloadFiles} className={styles.downloadBtn}>↓ Download Compressed File(s) ↓</button>
                 </>
@@ -285,10 +285,13 @@ export default function Home() {
               {/* Top compressed section */}
               {(acceptedFiles.length > 0 && compressedFilesList.length > 0) &&  (
                 <div>
-                  <h4>Top Compressed Files</h4>
+                  <h4>Compressed Files</h4>
                   <ul>
                     {compressedFilesList.map((f, index) => (
-                      <li key={index}>
+                      <li key={index} className='compressedList'>
+                        <button onClick={() => { setPreviewIndex(index); setOpenModel(true) }}
+                        className='previewButton'
+                        >&#128065;</button>
                         <span className={styles.fileName}>
                           {f.fileName.slice(0, 20)}{f.fileName.length > 10 ? '...' : ''}
                         </span>
@@ -298,32 +301,16 @@ export default function Home() {
                         (
                           <span className={styles.compressPercent}>({f.compressionPercentage.toFixed(2)}% ↓)</span>
                         ) }
-                         <button onClick={() => { setPreviewIndex(index); setOpenModel(true) }}> Preview </button>
-                         { previewIndex != null && (
-                            <Modal isOpen={openModel} style={{ width: '50%', height: '50%' }}>
-                              <div style={{ margin: 'auto', padding: 'auto'}}>
-                                <ReactCompareSlider
-                                  itemOne={
-                                    <img
-                                      src={URL.createObjectURL(compressedFilesList[previewIndex].originalFile)}
-                                      alt={`Original - ${compressedFilesList[previewIndex].fileName}`}
-                                      style={{ maxWidth: '100%', maxHeight: '100%' }}
-                                    />
-                                  }
-                                  itemTwo={
-                                    <img
-                                      src={URL.createObjectURL(new Blob([compressedFilesList[previewIndex].compressedFile]))}
-                                      alt={`Compressed - ${compressedFilesList[previewIndex].fileName}`}
-                                      style={{ maxWidth: '100%', maxHeight: '100%' }}
-                                    />
-                                  }
-                                  style={{ width: '100%', height: '60%' }}
-                                />
-                                <button onClick={() => setOpenModel(false)}>Close</button>
-                              </div>
-                            </Modal>
-                         )
-                        }
+                         { 
+                          previewIndex != null && (
+                          <FilePreviewModal
+                            isOpen={openModel}
+                            onClose={() => setOpenModel(false)}
+                            originalFile={compressedFilesList[previewIndex].originalFile}
+                            compressedFile={compressedFilesList[previewIndex].compressedFile}
+                            fileName={compressedFilesList[previewIndex].fileName}
+                          />
+                        )}
                       </li>
                     ))}
                   </ul>
