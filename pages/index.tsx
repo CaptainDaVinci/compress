@@ -166,8 +166,8 @@ export default function Home() {
   return (
       <>
       <Head>
-        <title>Bulk Image Compressor</title>
-        <meta name="description" content="Bulk compress your images instantly for free and reduce the size of your images to few kbs. Supported image formats - JPG, JPEG, PNG and many more. No sign-up or upload required, complete privacy." />
+        <title>Compress multiple images to reduce size at optimal quality instantly online - for free!</title>
+        <meta name="description" content="Compress multiple images to reduce size instantly for free. Supported image formats - JPG, JPEG, PNG and many more. No sign-up or upload required, complete privacy." />
         <meta name="keywords" content='compression,bulk,images,png,jpg,jpeg,privacy,free,lossless'/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <meta name="robots" content="index, follow"/>
